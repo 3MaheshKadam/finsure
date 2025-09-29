@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { 
@@ -14,7 +14,10 @@ import {
   Home,
   Car,
   GraduationCap,
-  DollarSign
+  DollarSign,
+  CreditCard,
+  Building2,
+  Coins
 } from 'lucide-react';
 
 const Header = () => {
@@ -22,8 +25,43 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [services, setServices] = useState([]);
+  const [loadingServices, setLoadingServices] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
   const pathname = usePathname();
+
+  // Map string icon names to Lucide React icons
+  const iconMap = {
+    User,
+    Building,
+    Home,
+    Car,
+    GraduationCap,
+    DollarSign,
+    CreditCard,
+    Building2,
+    Coins
+  };
+
+  // Fetch services from API
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('/api/services');
+        if (!response.ok) {
+          throw new Error('Failed to fetch services');
+        }
+        const data = await response.json();
+        setServices(data);
+        setLoadingServices(false);
+      } catch (err) {
+        setError(err.message);
+        setLoadingServices(false);
+      }
+    };
+    fetchServices();
+  }, []);
 
   // Handle scroll effect
   useEffect(() => {
@@ -42,23 +80,13 @@ const Header = () => {
     { name: 'Contact', href: '/contact', type: 'page' }
   ];
 
-  // Services for dropdown
-  const serviceTypes = [
-    { name: 'Personal Loans', href: '/#personal-loans', icon: <User className="h-5 w-5" /> },
-    { name: 'Business Loans', href: '/#business-loans', icon: <Building className="h-5 w-5" /> },
-    { name: 'Home Loans', href: '/#home-loans', icon: <Home className="h-5 w-5" /> },
-    { name: 'Auto Loans', href: '/#auto-loans', icon: <Car className="h-5 w-5" /> },
-    { name: 'Education Loans', href: '/#education-loans', icon: <GraduationCap className="h-5 w-5" /> },
-    { name: 'Gold Loans', href: '/#gold-loans', icon: <DollarSign className="h-5 w-5" /> }
-  ];
-
   // Handle navigation
   const handleNavigation = (item) => {
     setIsMobileMenuOpen(false);
     setIsServicesOpen(false);
     setActiveSection(item.href.substring(2) || 'home');
     
-    if (item.type === 'page') {
+    if (item.type === 'page' || item.type === 'service') {
       router.push(item.href);
     } else if (item.type === 'section') {
       if (pathname === '/') {
@@ -90,6 +118,23 @@ Best regards`);
     const mailtoLink = `mailto:info@finsuresolutions.com?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
   };
+
+  // Skeleton Loader Component
+  const SkeletonLoader = () => (
+    <div className="space-y-2 px-4 py-2">
+      {[...Array(4)].map((_, idx) => (
+        <motion.div
+          key={idx}
+          className="flex items-center py-3 px-4 bg-gray-100 rounded-lg"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="w-5 h-5 bg-gray-300 rounded-full mr-3"></div>
+          <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+        </motion.div>
+      ))}
+    </div>
+  );
 
   return (
     <motion.header 
@@ -148,41 +193,52 @@ Best regards`);
                     Services
                     <ChevronDown className={`h-4 w-4 ml-1 transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
                   </motion.button>
-                  {isServicesOpen && (
-                    <motion.div 
-                      className="absolute top-full left-0 mt-1 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 py-4 z-50"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      onMouseEnter={() => setIsServicesOpen(true)}
-                      onMouseLeave={() => setIsServicesOpen(false)}
-                    >
-                      <div className="px-4 pb-2">
-                        <h3 className="text-sm font-semibold text-gray-800 mb-2">Loan Services</h3>
-                      </div>
-                      {serviceTypes.map((service, idx) => (
-                        <Link
-                          key={idx}
-                          href={service.href}
-                          onClick={() => handleNavigation({ ...service, type: 'section' })}
-                          className="flex items-center px-4 py-3 hover:bg-blue-50 transition-colors duration-200 group"
-                        >
-                          {service.icon}
-                          <span className="text-sm text-gray-700 group-hover:font-medium ml-3">{service.name}</span>
-                        </Link>
-                      ))}
-                      <div className="border-t border-gray-100 mt-2 pt-2 px-4">
-                        <Link
-                          href="/#all-services"
-                          onClick={() => handleNavigation({ href: '/#all-services', type: 'section' })}
-                          className="text-sm font-medium flex items-center text-blue-600"
-                        >
-                          View All Services →
-                        </Link>
-                      </div>
-                    </motion.div>
-                  )}
+                  <AnimatePresence>
+                    {isServicesOpen && (
+                      <motion.div 
+                        className="absolute top-full left-0 mt-1 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 py-4 z-50"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        onMouseEnter={() => setIsServicesOpen(true)}
+                        onMouseLeave={() => setIsServicesOpen(false)}
+                      >
+                        <div className="px-4 pb-2">
+                          <h3 className="text-sm font-semibold text-gray-800 mb-2">Loan Services</h3>
+                        </div>
+                        {loadingServices ? (
+                          <SkeletonLoader />
+                        ) : error ? (
+                          <div className="px-4 py-2 text-sm text-red-600">Error: {error}</div>
+                        ) : (
+                          services.map((service, idx) => {
+                            const ServiceIcon = iconMap[service.icon] || User; // Fallback to User icon
+                            return (
+                              <Link
+                                key={idx}
+                                href={`/services/${service.id}`}
+                                onClick={() => handleNavigation({ name: service.title, href: `/services/${service.id}`, type: 'service' })}
+                                className="flex items-center px-4 py-3 hover:bg-blue-50 transition-colors duration-200 group"
+                              >
+                                <ServiceIcon className="h-5 w-5 text-gray-600 group-hover:text-blue-600" />
+                                <span className="text-sm text-gray-700 group-hover:font-medium ml-3">{service.title}</span>
+                              </Link>
+                            );
+                          })
+                        )}
+                        <div className="border-t border-gray-100 mt-2 pt-2 px-4">
+                          <Link
+                            href="/#all-services"
+                            onClick={() => handleNavigation({ href: '/#all-services', type: 'section' })}
+                            className="text-sm font-medium flex items-center text-blue-600"
+                          >
+                            View All Services →
+                          </Link>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ) : (
                 <motion.button
@@ -210,16 +266,11 @@ Best regards`);
           {/* Contact Info & CTA */}
           <div className="hidden lg:flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-gray-600">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-              </svg>
+              <Phone className="w-4 h-4" />
               <span className="text-sm font-medium">+91 98765 43210</span>
             </div>
             <div className="flex items-center space-x-2 text-gray-600">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-              </svg>
+              <Mail className="w-4 h-4" />
               <span className="text-sm font-medium">info@finsuresolutions.com</span>
             </div>
             <motion.button 
@@ -238,13 +289,7 @@ Best regards`);
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isMobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -274,21 +319,38 @@ Best regards`);
                     Services
                     <ChevronDown className={`h-4 w-4 ml-1 inline transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
                   </button>
-                  {isServicesOpen && (
-                    <div className="pl-4 space-y-2 mt-2">
-                      {serviceTypes.slice(0, 4).map((service, idx) => (
-                        <Link
-                          key={idx}
-                          href={service.href}
-                          onClick={() => handleNavigation({ ...service, type: 'section' })}
-                          className="flex items-center py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors rounded-lg"
-                        >
-                          {service.icon}
-                          <span className="ml-2">{service.name}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {isServicesOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="pl-4 space-y-2 mt-2"
+                      >
+                        {loadingServices ? (
+                          <SkeletonLoader />
+                        ) : error ? (
+                          <div className="px-4 py-2 text-sm text-red-600">Error: {error}</div>
+                        ) : (
+                          services.slice(0, 4).map((service, idx) => {
+                            const ServiceIcon = iconMap[service.icon] || User; // Fallback to User icon
+                            return (
+                              <Link
+                                key={idx}
+                                href={`/services/${service.id}`}
+                                onClick={() => handleNavigation({ name: service.title, href: `/services/${service.id}`, type: 'service' })}
+                                className="flex items-center py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors rounded-lg"
+                              >
+                                <ServiceIcon className="h-5 w-5" />
+                                <span className="ml-2">{service.title}</span>
+                              </Link>
+                            );
+                          })
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ) : (
                 <button
@@ -310,16 +372,11 @@ Best regards`);
             <div className="px-4 py-3 border-t border-gray-200 mt-4">
               <div className="space-y-2">
                 <div className="flex items-center space-x-3 text-gray-600">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                  </svg>
+                  <Phone className="w-4 h-4" />
                   <span className="text-sm">+91 98765 43210</span>
                 </div>
                 <div className="flex items-center space-x-3 text-gray-600">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
+                  <Mail className="w-4 h-4" />
                   <span className="text-sm">info@finsuresolutions.com</span>
                 </div>
               </div>

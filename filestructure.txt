@@ -1,0 +1,63 @@
+|-- .env.local
+|-- .gitignore
+|-- app
+    |-- about
+        |-- page.jsx
+    |-- admin
+        |-- components
+            |-- AdminForm.jsx
+            |-- AdminLogin.jsx
+            |-- AdminTable.jsx
+        |-- page.jsx
+    |-- api
+        |-- company
+            |-- delete
+                |-- route.js
+            |-- route.js
+        |-- newsletter
+            |-- route.js
+        |-- services
+            |-- route.js
+            |-- [id]
+                |-- route.js
+        |-- testimonials
+            |-- route.js
+            |-- [id]
+                |-- route.js
+    |-- components
+        |-- admin
+            |-- AdminLayout.jsx
+        |-- Footer.jsx
+        |-- Header.jsx
+        |-- Hero.jsx
+        |-- HowItWorksSection.jsx
+        |-- ServicesSection.jsx
+        |-- TestimonialsSection .jsx
+    |-- contact
+        |-- page.jsx
+    |-- favicon.ico
+    |-- globals.css
+    |-- layout.js
+    |-- lib
+        |-- mongodb.js
+    |-- models
+        |-- Company.js
+        |-- Service.js
+        |-- Testimonial.js
+    |-- page.js
+    |-- services
+        |-- [serviceId]
+            |-- page.jsx
+|-- eslint.config.mjs
+|-- jsconfig.json
+|-- next.config.mjs
+|-- package-lock.json
+|-- package.json
+|-- postcss.config.mjs
+|-- public
+    |-- file.svg
+    |-- globe.svg
+    |-- next.svg
+    |-- vercel.svg
+    |-- window.svg
+|-- README.md
