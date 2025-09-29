@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/app/lib/mongodb';
-import Company from '@/app/models/Company';
+import connectDB from "@/app/lib/mongodb";
+import Company from "@/app/models/Company";
+
 
 // GET: Fetch company details (assuming a single company record for simplicity)
 export async function GET() {
