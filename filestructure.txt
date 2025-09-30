@@ -24,6 +24,9 @@
             |-- route.js
             |-- [id]
                 |-- route.js
+    |-- assets
+        |-- logo.png
+    |-- ClientLayout.js
     |-- components
         |-- admin
             |-- AdminLayout.jsx
@@ -37,6 +40,8 @@
         |-- page.jsx
     |-- favicon.ico
     |-- globals.css
+    |-- grievance
+        |-- page.jsx
     |-- layout.js
     |-- lib
         |-- mongodb.js
@@ -45,9 +50,13 @@
         |-- Service.js
         |-- Testimonial.js
     |-- page.js
+    |-- privacy-policy
+        |-- page.jsx
     |-- services
         |-- [serviceId]
             |-- page.jsx
+    |-- terms
+        |-- page.jsx
 |-- eslint.config.mjs
 |-- jsconfig.json
 |-- next.config.mjs

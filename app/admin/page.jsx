@@ -15,54 +15,90 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
-  const [isNewItem, setIsNewItem] = useState(false); // Track if adding new item
+  const [isNewItem, setIsNewItem] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
-  // Check authentication status
+  // Check authentication status on component mount
   useEffect(() => {
     const authStatus = localStorage.getItem('adminAuthenticated');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
+    const authTimestamp = localStorage.getItem('adminAuthTimestamp');
+    
+    // Check if authentication is still valid (24 hours)
+    if (authStatus === 'true' && authTimestamp) {
+      const currentTime = new Date().getTime();
+      const authTime = parseInt(authTimestamp);
+      const hoursElapsed = (currentTime - authTime) / (1000 * 60 * 60);
+      
+      if (hoursElapsed < 24) {
+        setIsAuthenticated(true);
+        console.log('Auto-login successful');
+      } else {
+        // Session expired
+        localStorage.removeItem('adminAuthenticated');
+        localStorage.removeItem('adminAuthTimestamp');
+        console.log('Session expired');
+      }
     }
   }, []);
 
   // Fetch data based on active section
   useEffect(() => {
     const fetchData = async () => {
+      if (!isAuthenticated) {
+        console.log('Not authenticated, skipping fetch');
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       try {
+        console.log(`Fetching data for: ${activeSection}`);
+        
+        let endpoint = '';
         if (activeSection === 'company') {
-          const response = await fetch('/api/company');
-          if (!response.ok) throw new Error('Failed to fetch company data');
-          const data = await response.json();
-          console.log('Company API Response:', data); // Debug API response
+          endpoint = '/api/company';
+        } else if (activeSection === 'services') {
+          endpoint = '/api/services';
+        } else if (activeSection === 'testimonials') {
+          endpoint = '/api/testimonials';
+        }
+        
+        console.log('API Endpoint:', endpoint);
+        const response = await fetch(endpoint);
+        console.log('Response Status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('API Response Data:', data);
+        
+        // Process data based on section
+        if (activeSection === 'company') {
           const company = Array.isArray(data) ? data[0] : data.data || data;
           setCompanyData(company || {});
         } else if (activeSection === 'services') {
-          const response = await fetch('/api/services');
-          if (!response.ok) throw new Error('Failed to fetch services');
-          const data = await response.json();
-          console.log('Services API Response:', data); // Debug API response
           const servicesData = Array.isArray(data) ? data : data.data || data.services || [];
           setServices(servicesData);
         } else if (activeSection === 'testimonials') {
-          const response = await fetch('/api/testimonials');
-          if (!response.ok) throw new Error('Failed to fetch testimonials');
-          const data = await response.json();
-          console.log('Testimonials API Response:', data); // Debug API response
           const testimonialsData = Array.isArray(data) ? data : data.data || data.testimonials || [];
           setTestimonials(testimonialsData);
         }
+        
         setError(null);
       } catch (err) {
-        setError(err.message);
-        console.error('Fetch Error:', err);
+        console.error('Fetch Error Details:', {
+          message: err.message,
+          stack: err.stack
+        });
+        setError(`Failed to fetch ${activeSection}: ${err.message}`);
       } finally {
         setLoading(false);
       }
     };
-    if (isAuthenticated) {
-      fetchData();
-    }
+    
+    fetchData();
   }, [activeSection, isAuthenticated]);
 
   // Debug state updates
@@ -78,35 +114,49 @@ const AdminDashboard = () => {
     console.log('editingItem State:', editingItem, 'isNewItem:', isNewItem);
   }, [editingItem, isNewItem]);
 
-  const handleLogin = () => {
-    console.log('Login Triggered'); // Debug login
-    setIsAuthenticated(true);
-    localStorage.setItem('adminAuthenticated', 'true');
+  const handleLogin = (password) => {
+    console.log('Login attempt with password:', password);
+    setLoginError('');
+    
+    // Password validation - using "finsure@2025" as the password
+    if (password === 'finsure@2025') {
+      console.log('Login successful');
+      setIsAuthenticated(true);
+      const timestamp = new Date().getTime();
+      localStorage.setItem('adminAuthenticated', 'true');
+      localStorage.setItem('adminAuthTimestamp', timestamp.toString());
+      setLoginError('');
+    } else {
+      console.log('Login failed - incorrect password');
+      setLoginError('Invalid password. Please try again.');
+    }
   };
 
   const handleLogout = () => {
-    console.log('Logout Triggered'); // Debug logout
+    console.log('Logout Triggered');
     setIsAuthenticated(false);
+    setLoginError('');
     localStorage.removeItem('adminAuthenticated');
+    localStorage.removeItem('adminAuthTimestamp');
   };
 
   const handleAdd = () => {
-    console.log('handleAdd Triggered'); // Debug add action
+    console.log('handleAdd Triggered');
     setEditingItem({});
-    setIsNewItem(true); // Mark as new item
+    setIsNewItem(true);
   };
 
   const handleEdit = (item) => {
-    console.log('Editing Item:', item); // Debug edit action
+    console.log('Editing Item:', item);
     setEditingItem(item);
-    setIsNewItem(false); // Mark as existing item
+    setIsNewItem(false);
   };
 
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
     try {
       const endpoint = activeSection === 'company' ? '/api/company/delete' : `/api/${activeSection}/${id}`;
-      console.log('Deleting Item ID:', id, 'Endpoint:', endpoint); // Debug delete action
+      console.log('Deleting Item ID:', id, 'Endpoint:', endpoint);
       const response = await fetch(endpoint, { method: 'DELETE' });
       if (!response.ok) throw new Error(`Failed to delete ${activeSection} item`);
       if (activeSection === 'company') {
@@ -139,7 +189,7 @@ const AdminDashboard = () => {
         ? `/api/${activeSection}`
         : `/api/${activeSection}/${formData.id}`;
       const method = isNewItem || activeSection === 'company' ? 'POST' : 'PUT';
-      console.log('Submitting Form Data:', cleanedFormData, 'Method:', method, 'Endpoint:', endpoint); // Debug form submission
+      console.log('Submitting Form Data:', cleanedFormData, 'Method:', method, 'Endpoint:', endpoint);
       const response = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -147,7 +197,7 @@ const AdminDashboard = () => {
       });
       if (!response.ok) throw new Error(`Failed to save ${activeSection} data`);
       const updatedData = await response.json();
-      console.log('API Response after Submit:', updatedData); // Debug API response
+      console.log('API Response after Submit:', updatedData);
       if (activeSection === 'company') {
         setCompanyData(updatedData);
       } else if (activeSection === 'services') {
@@ -166,6 +216,62 @@ const AdminDashboard = () => {
       console.error('Submit Error:', err);
     }
   };
+
+  // Login Component
+  const LoginSection = () => (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md"
+      >
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-white text-2xl font-bold">F</span>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="text-gray-600 mt-2">Enter your password to continue</p>
+        </div>
+
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const password = formData.get('password');
+          handleLogin(password);
+        }} className="space-y-6">
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter admin password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              required
+            />
+          </div>
+
+          {loginError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-red-700 text-sm font-medium">{loginError}</p>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Sign In
+          </button>
+        </form>
+
+     
+      </motion.div>
+    </div>
+  );
 
   const sectionConfigs = {
     company: {
@@ -349,7 +455,6 @@ const AdminDashboard = () => {
       fields: {
         title: 'Service',
         inputs: [
-          // { name: 'id', label: 'ID', placeholder: 'Enter unique ID (e.g., personal)', required: true, disabled: isNewItem },
           { name: 'icon', label: 'Icon', placeholder: 'Enter icon name (e.g., CreditCard)', required: true },
           { name: 'title', label: 'Title', placeholder: 'Enter service title', required: true },
           { name: 'subtitle', label: 'Subtitle', placeholder: 'Enter subtitle' },
@@ -425,7 +530,6 @@ const AdminDashboard = () => {
       fields: {
         title: 'Testimonial',
         inputs: [
-          // { name: 'id', label: 'ID', type: 'number', placeholder: 'Enter unique ID (e.g., 1)', required: true, disabled: isNewItem },
           { name: 'name', label: 'Name', placeholder: 'Enter customer name', required: true },
           { name: 'location', label: 'Location', placeholder: 'Enter location', required: true },
           { name: 'loanType', label: 'Loan Type', placeholder: 'Enter loan type', required: true },
@@ -444,6 +548,12 @@ const AdminDashboard = () => {
 
   const currentConfig = sectionConfigs[activeSection];
 
+  // Show login section if not authenticated
+  if (!isAuthenticated) {
+    return <LoginSection />;
+  }
+
+  // Show main dashboard if authenticated
   return (
     <AdminLayout
       activeSection={activeSection}
@@ -453,25 +563,36 @@ const AdminDashboard = () => {
       <div className="mb-8 flex justify-between items-center">
         <h2 className="text-3xl font-bold text-gray-900">{currentConfig.title}</h2>
         <button
-          onClick={() => {
-            console.log('Add New Button Clicked'); // Debug button click
-            handleAdd();
-          }}
+          onClick={handleAdd}
           className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all"
         >
           Add New
         </button>
       </div>
 
-      {error ? (
-        <p className="text-red-500 text-center text-sm">{error}</p>
+      {loading ? (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading {currentConfig.title}...</p>
+        </div>
+      ) : error ? (
+        <div className="text-red-500 text-center p-4 bg-red-50 rounded-lg">
+          <p className="font-semibold">Error Loading Data</p>
+          <p className="text-sm">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
       ) : (
         <AdminTable
           data={currentConfig.data}
           columns={currentConfig.columns}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          isLoading={loading}
+          isLoading={false}
         />
       )}
 
@@ -480,7 +601,7 @@ const AdminDashboard = () => {
           initialData={editingItem}
           onSubmit={handleFormSubmit}
           onCancel={() => {
-            console.log('Form Cancelled'); // Debug cancel action
+            console.log('Form Cancelled');
             setEditingItem(null);
             setIsNewItem(false);
           }}

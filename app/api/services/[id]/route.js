@@ -7,7 +7,7 @@ import Service from '@/app/models/Service';
 export async function GET(request, { params }) {
   try {
     await connectDB();
-    const service = await Service.findOne({ id: params.id });
+    const service = await Service.findOne({ _id: params.id });
     if (!service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
@@ -58,7 +58,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await connectDB();
-    const deletedService = await Service.findOneAndDelete({ id: params.id });
+    const deletedService = await Service.findOneAndDelete({ _id: params.id });
     if (!deletedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }

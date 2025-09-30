@@ -377,7 +377,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white">
       {/* Newsletter Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-12">
+      {/* <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white mb-4">Stay Updated with {companyData.name}</h2>
@@ -425,12 +425,12 @@ const Footer = () => {
             </AnimatePresence>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Footer Content */}
       <div className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
             {/* Company Info */}
             <div className="lg:col-span-1">
               {/* Logo */}
@@ -494,44 +494,7 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Loan Services */}
-            <div>
-              <h4 className="text-white font-bold text-lg mb-6">Loan Services</h4>
-              <div className="space-y-3">
-                {companyData.loanServices?.map((service, index) => {
-                  const ServiceIcon = iconMap[service.icon];
-                  return (
-                    <motion.a
-                      key={index}
-                      href={service.href}
-                      className="flex items-center text-gray-300 hover:text-white transition-colors group"
-                      whileHover={{ x: 5 }}
-                    >
-                      <ServiceIcon className="h-4 w-4 mr-3 text-blue-400 group-hover:text-white flex-shrink-0" />
-                      <span className="group-hover:translate-x-1 transition-transform">{service.name}</span>
-                    </motion.a>
-                  );
-                })}
-              </div>
-              
-              {/* Special Offer Banner */}
-              <motion.div 
-                className="mt-8 p-4 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-lg border border-blue-500/30"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="flex items-center mb-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                  <span className="text-green-400 text-sm font-semibold">Special Offer</span>
-                </div>
-                <p className="text-white text-sm mb-2">Get up to 2% off on processing fees</p>
-                <a href="/offers" className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center">
-                  View All Offers <ArrowRight className="h-3 w-3 ml-1" />
-                </a>
-              </motion.div>
-            </div>
-
+         
             {/* Quick Links */}
             <div>
               <h4 className="text-white font-bold text-lg mb-6">Quick Links</h4>
@@ -637,7 +600,7 @@ const Footer = () => {
               </div>
 
               {/* Legal Links */}
-              <div>
+              {/* <div>
                 <h5 className="text-white font-semibold mb-4">Legal & Compliance</h5>
                 <div className="space-y-2">
                   {companyData.legalLinks.map((link, index) => (
@@ -651,7 +614,7 @@ const Footer = () => {
                     </motion.a>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -665,13 +628,7 @@ const Footer = () => {
               <p className="text-gray-400 text-sm">
                 © {currentYear} {companyData.name}. All rights reserved.
               </p>
-              <div className="flex items-center space-x-4 text-xs text-gray-500">
-                <span>RBI Registered NBFC</span>
-                <span>•</span>
-                <span>CIN: {companyData.cin}</span>
-                <span>•</span>
-                <span>GST: {companyData.gst}</span>
-              </div>
+
             </div>
             
             <div className="flex items-center space-x-4">

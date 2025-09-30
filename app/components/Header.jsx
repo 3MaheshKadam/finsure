@@ -19,7 +19,8 @@ import {
   Building2,
   Coins
 } from 'lucide-react';
-
+import Image from 'next/image';
+import Logo from "../assets/logo.png";
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -115,7 +116,7 @@ I am interested in your financial services and would like to get started. Please
 
 Best regards`);
     
-    const mailtoLink = `mailto:info@finsuresolutions.com?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:finsuresolutions1@gmail.com?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
   };
 
@@ -157,15 +158,16 @@ Best regards`);
             onClick={() => handleNavigation({ name: 'Home', href: '/', type: 'page' })}
           >
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">F</span>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-baseline">
-                  <span className="text-xl font-bold text-gray-900">Finsure</span>
-                  <span className="text-lg text-gray-600 ml-1">Solutions</span>
-                </div>
-                <span className="text-xs text-gray-500 -mt-1">Your Financial Partner</span>
+              {/* Logo Image */}
+              <div className="relative w-48 h-12"> {/* Adjust width and height as needed */}
+                <Image
+                  src={Logo} // or "../assets/logo.png" depending on your folder structure
+                  alt="Finsure Solutions"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 768px) 120px, 192px"
+                />
               </div>
             </div>
           </motion.div>
@@ -267,11 +269,11 @@ Best regards`);
           <div className="hidden lg:flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-gray-600">
               <Phone className="w-4 h-4" />
-              <span className="text-sm font-medium">+91 98765 43210</span>
+              <span className="text-sm font-medium">+91 8208864853</span>
             </div>
             <div className="flex items-center space-x-2 text-gray-600">
               <Mail className="w-4 h-4" />
-              <span className="text-sm font-medium">info@finsuresolutions.com</span>
+              <span className="text-sm font-medium">finsuresolutions1@gmail.com</span>
             </div>
             <motion.button 
               onClick={handleGetStarted}
@@ -373,11 +375,11 @@ Best regards`);
               <div className="space-y-2">
                 <div className="flex items-center space-x-3 text-gray-600">
                   <Phone className="w-4 h-4" />
-                  <span className="text-sm">+91 98765 43210</span>
+                  <span className="text-sm">+91 8208864853</span>
                 </div>
                 <div className="flex items-center space-x-3 text-gray-600">
                   <Mail className="w-4 h-4" />
-                  <span className="text-sm">info@finsuresolutions.com</span>
+                  <span className="text-sm">finsuresolutions1@gmail.com</span>
                 </div>
               </div>
               {/* Mobile CTA */}

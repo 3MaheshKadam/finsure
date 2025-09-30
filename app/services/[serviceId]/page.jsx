@@ -1331,7 +1331,7 @@ Please contact me to discuss the application process and requirements.
 
 Best regards`);
     
-    const mailtoLink = `mailto:info@finsuresolutions.com?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:finsuresolutions1@gmail.com?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
   };
 
@@ -1354,7 +1354,7 @@ Please provide me with a detailed quote including interest rates, EMI calculatio
 
 Best regards`);
     
-    const mailtoLink = `mailto:info@finsuresolutions.com?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:finsuresolutions1@gmail.com?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
   };
 
@@ -2020,11 +2020,11 @@ Best regards`);
           <div className="flex flex-col sm:flex-row gap-8 justify-center items-center text-gray-300">
             <div className="flex items-center">
               <Phone className="h-5 w-5 mr-2" />
-              <span className="font-medium">+91 98765 43210</span>
+              <span className="font-medium">+91 8208864853</span>
             </div>
             <div className="flex items-center">
               <Mail className="h-5 w-5 mr-2" />
-              <span className="font-medium">info@finsuresolutions.com</span>
+              <span className="font-medium">finsuresolutions1@gmail.com</span>
             </div>
             <div className="flex items-center">
               <Clock className="h-5 w-5 mr-2" />

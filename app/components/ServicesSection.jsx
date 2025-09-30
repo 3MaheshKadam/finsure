@@ -656,37 +656,7 @@ const ServicesSection = ({ onServiceClick }) => {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center mt-16">
-          <h3 className="text-2xl font-bold text-black mb-4">
-            Ready to Get Started?
-          </h3>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Choose the loan that fits your needs and start your application process today. 
-            Our experts are here to guide you every step of the way.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.button 
-              className="text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center" 
-              style={{ backgroundColor: '#4248f8' }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Start Application
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </motion.button>
-            <motion.button 
-              className="border-2 text-gray-700 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center hover:shadow-lg" 
-              style={{ borderColor: '#4248f8' }} 
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#4248f8'} 
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Talk to Expert
-              <Users className="ml-2 h-5 w-5" />
-            </motion.button>
-          </div>
-        </div>
+     
       </div>
     </section>
   );

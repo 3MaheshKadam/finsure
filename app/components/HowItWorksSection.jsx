@@ -309,42 +309,7 @@ const HowItWorksSection = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-3xl p-12 text-center">
-          <h3 className="text-3xl font-bold text-black mb-4">
-            Ready to Start Your Application?
-          </h3>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
-            Join thousands of satisfied customers who have successfully obtained loans through our platform. 
-            Start your journey to financial freedom today.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center" style={{ backgroundColor: '#4248f8' }}>
-              Start Application
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </button>
-            
-            <button className="border-2 text-gray-700 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center hover:shadow-lg bg-white" style={{ borderColor: '#4248f8' }} onMouseEnter={(e) => e.target.style.backgroundColor = '#4248f8'} onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}>
-              <Calculator className="mr-2 h-5 w-5" />
-              EMI Calculator
-            </button>
-          </div>
-
-          {/* Contact Options */}
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <p className="text-gray-600 mb-4">Need help? Contact our experts</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+919876543210" className="flex items-center text-blue-600 hover:text-blue-700 font-medium">
-                <Phone className="h-4 w-4 mr-2" />
-                +91 98765 43210
-              </a>
-              <a href="mailto:info@finsuresolutions.com" className="flex items-center text-blue-600 hover:text-blue-700 font-medium">
-                <Mail className="h-4 w-4 mr-2" />
-                info@finsuresolutions.com
-              </a>
-            </div>
-          </div>
-        </div>
+      
 
       </div>
     </section>
