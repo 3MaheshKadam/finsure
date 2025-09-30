@@ -161,13 +161,14 @@ Best regards`);
               {/* Logo Image */}
               <div className="relative w-48 h-12"> {/* Adjust width and height as needed */}
                 <Image
-                  src={Logo} // or "../assets/logo.png" depending on your folder structure
+                  src={Logo} 
                   alt="Finsure Solutions"
                   fill
                   className="object-contain"
                   priority
                   sizes="(max-width: 768px) 120px, 192px"
                 />
+                
               </div>
             </div>
           </motion.div>
