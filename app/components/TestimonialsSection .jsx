@@ -45,6 +45,8 @@ const TestimonialsSection = () => {
           throw new Error('Failed to fetch testimonials');
         }
         const data = await response.json();
+        console.log(data);
+        
         setTestimonials(data);
         setLoading(false);
       } catch (err) {
