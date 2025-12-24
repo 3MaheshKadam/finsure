@@ -15,7 +15,7 @@
     "heroicons": "^2.2.0",
     "lucide-react": "^0.544.0",
     "mongoose": "^8.18.2",
-    "next": "^16.1.0",
+    "next": "^15.4.6",
     "next-sitemap": "^4.2.3",
     "nodemailer": "^7.0.11",
     "react": "^19.2.3",
