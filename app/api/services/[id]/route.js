@@ -7,7 +7,8 @@ import Service from '@/app/models/Service';
 export async function GET(request, { params }) {
   try {
     await connectDB();
-    const service = await Service.findOne({ _id: params.id });
+    const {id} = await params
+    const service = await Service.findOne({ _id: id });
     if (!service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
