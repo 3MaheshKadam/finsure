@@ -303,14 +303,15 @@ Best regards`);
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button 
-                  onClick={handleApplyNow}
-                  className="text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
-                  style={{ backgroundColor: serviceData.color }}
-                >
-                  Apply Now
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </button>
+              <Link 
+  // onClick={handleApplyNow}
+  href={`/contact#contact-form`}
+  className="text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+  style={{ backgroundColor: serviceData.color }}
+>
+  Apply Now
+  <ArrowRight className="ml-2 h-5 w-5" />
+</Link>
                <Link 
   href={`/emi`}
   className="border-2 bg-white text-gray-700 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center hover:shadow-lg"
