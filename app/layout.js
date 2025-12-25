@@ -32,7 +32,7 @@ export const metadata = {
     url: "https://finsuresolutions.com",
     images: [
       {
-        url: '/og-image.jpg', // Add your OG image path
+        url: '/favicon.ico', // Add your OG image path
         width: 1200,
         height: 630,
         alt: 'Finsure Solutions',
