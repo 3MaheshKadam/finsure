@@ -116,17 +116,17 @@ const AdminTable = ({ data, columns, onEdit, onDelete, isLoading }) => {
                   >
                     <Edit className="h-4 w-4" />
                   </motion.button>
-                  <motion.button
+                  {/* <motion.button
                     onClick={() => {
-                      console.log('Delete Clicked:', item.id); // Debug delete action
-                      onDelete(item.id);
+                      console.log('Delete Clicked:', item._id); // Debug delete action
+                      onDelete(item._id);
                     }}
                     className="text-red-600 hover:text-red-800"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
                     <Trash2 className="h-4 w-4" />
-                  </motion.button>
+                  </motion.button> */}
                 </td>
               </motion.tr>
             ))
