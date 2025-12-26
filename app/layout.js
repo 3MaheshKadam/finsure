@@ -87,6 +87,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+              <link rel="icon" href="/logo.png"/>
+
         {/* You can add additional head tags here if needed */}
       </head>
       <body className={`${montserrat.variable} antialiased font-montserrat`}>
